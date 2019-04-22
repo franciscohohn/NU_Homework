@@ -216,15 +216,15 @@ order by times_rented desc;
 
 # 7f. Write a query to display how much business, in dollars, each store brought in.
 # store(store_id) staff(staff_id) rental(rental_id) payment(rental_id)
-select st.store_id, sum(amount) as Total_Sales
-from payment p
-join rental r
-on p.rental_id = r.rental_id
-join staff s
-on r.staff_id = s.staff_id
-join store st
-on s.store_id = st.store_id
-group by store_id;
+SELECT s.store_id, SUM(amount) AS Gross
+                 FROM payment p
+                 JOIN rental r
+                 ON (p.rental_id = r.rental_id)
+                 JOIN inventory i
+                 ON (i.inventory_id = r.inventory_id)
+                 JOIN store s
+                 ON (s.store_id = i.store_id)
+                 GROUP BY s.store_id;
 
 # 7g. Write a query to display for each store its store ID, city, and country.
 select st.store_id, city, country
