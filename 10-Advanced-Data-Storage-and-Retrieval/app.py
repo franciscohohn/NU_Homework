@@ -46,32 +46,21 @@ def home():
            f"/api/v1.0/precipitation<br/>"
            f"/api/v1.0/stations<br/>"
            f"/api/v1.0/tobs<br/>"
-           f"/api/v1.0/<start><br/>"
-           f"/api/v1.0/<start>/<end><br/>"
+           f"/api/v1.0/(Start(yyyy-mm-dd))<br/>"
+           f"/api/v1.0/(Start(yyyy-mm-dd))/(End(yyyy-mm-dd))<br/>"
            )
-
 
 @app.route("/api/v1.0/precipitation")
 def calc_temps():
-# def calc_temps(start_date, end_date):
-    
-    """TMIN, TAVG, and TMAX for a list of dates.
-    
-    Args:
-        start_date (string): A date string in the format %Y-%m-%d
-        end_date (string): A date string in the format %Y-%m-%d
-        
-    Returns:
-        TMIN, TAVE, and TMAX
-    """
-    
-    print("Server received for 'precipitation' page...")
-    
-    return jsonify(session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).all())\
-#         filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).all()
-
-# function usage example
-# print(calc_temps(start_date, end_date))
+    prcp_query=session.query(Measurement.date, Measurement.prcp, Measurement.station).filter(Measurement.date.between("2016-08-23", "2017-08-23")).all()
+    pcrp_list=[]
+    for row in range(len(prcp_query)):
+        prcp_dict = {}
+        prcp_dict["date"] = prcp_query[row][0]
+        prcp_dict["prcp"] = prcp_query[row][1]
+        prcp_dict["station"] = prcp_query[row][2]
+        pcrp_list.append(prcp_dict)
+    return jsonify(pcrp_list)
 
 @app.route("/api/v1.0/stations")
 def stations():
@@ -86,35 +75,23 @@ def tobs():
 
     return jsonify(session.query(Measurement.date, Measurement.tobs).filter(Measurement.date== '2017-08-23').all())
 
-@app.route("/api/v1.0/<start>")
-def start_only():
+@app.route("/api/v1.0/<start_date>/")
+def temp_start(start_date):
     
-    print("Server received for 'start_only' page...")
-
-    return("Works")
-
-@app.route("/api/v1.0/<start>/<end>")
-def start_end():
+    temps = session.query(func.min(Measurement.tobs), func.max(Measurement.tobs), func.avg(Measurement.tobs)).filter(Measurement.date >= start_date).first()
     
-    print("Server received for 'start_end' page...")
+    temps_dict1 = {"TMIN": temps[0], "TMAX": temps[1], "TAVG": round(temps[2],2)}
+    return jsonify(temps_dict1)
 
-    return("Works")
-
+@app.route("/api/v1.0/<start_date>/<end_date>/")
+def temp_range(start_date, end_date):
+    
+    temps = session.query(func.min(Measurement.tobs), func.max(Measurement.tobs), func.avg(Measurement.tobs)).filter(Measurement.date.between(start_date, end_date)).first()
+    
+    temps_dict2 = {"TMIN": temps[0], "TMAX": temps[1], "TAVG": round(temps[2],2)}
+    return jsonify(temps_dict2)
 
 if __name__ == '__main__':
     app.run(debug=True)
 
     
-# Use your previous function `calc_temps` to calculate the tmin, tavg, and tmax 
-# for your trip using the previous year's data for those same dates.
-
-
-# Plot the results from your previous query as a bar chart. 
-# Use "Trip Avg Temp" as your Title
-# Use the average temperature for the y value
-# Use the peak-to-peak (tmax-tmin) value as the y error bar (yerr)
-
-
-# Calculate the total amount of rainfall per weather station for your trip dates using the previous year's matching dates.
-# Sort this in descending order by precipitation amount and list the station, name, latitude, longitude, and elevation
-
