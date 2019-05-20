@@ -1,102 +1,58 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Mission to Mars</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <div class="jumbotron text-center">
+      <h1>Mission to Mars</h1>
+      <p><a class="btn btn-primary btn-lg" href="/scrape" role="button">Scrape New Data!</a></p>
+    </div> 
+    <div class="row" id="mars-news">
+        <div class="col-md-12">
+            <h3><strong>Latest Mars News</strong></h3>
+              <h4><strong>{{mars_data.newsTitle}}</strong></h4>
+                  <p>{{mars_data.newsP}}</p>
+        </div>
+      </div>
 
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-        <title>Mission to Mars</title>
-    </head>
-    <body>
-
-            <!--jumbotron-->
-            <div class="jumbotron jumbotron-fluid">
-                <div class="container text-center">
-                    <h1 class="display-4">Mission to Mars</h1>
-                    <button type="button" class="btn btn-primary btn-lg btn-center" href="/scrape">Scrape New Data</button>
-                </div>
-            </div>
-
-            <!--top container-->
-            <div class="container">
-                <div class="row">
-                    <div class="column">
-                        <h2>Latest Mars News</h2>
-                        <h4>fkjdfkjdhfkjsdhfkjdhkjdfhjkdshfkj</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Tincidunt arcu non sodales neque sodales ut etiam sit amet. Blandit turpis cursus in hac.
-                            Elementum sagittis vitae et leo duis. Enim ut tellus elementum sagittis vitae et.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!--containers-->
-            <div class="container">
-                    <div class="row">
-                      <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
-                        <div class="box">
-                          <h3>Summary: Latitute vs. X</h3>
-                          <hr>
-                          <img class="main-image" src="" alt="Max Temperature">
-                          <p> The purpose of this project was to analyze how weather changes as you get closer to the equator. To accomplish this analysis,
-                              we first pulled data from the OpenWeatherMap API to assemble a dataset on over 500 cities.</p>
-                          <p> After assembling the dataset, we used Matplotlib to plot various aspects of the weather vs. latitude.
-                              Factors we looked at included: temperature, cloudiness, wind speed, and humidity. This site provides the
-                              source data and visualizations created as part of the analysis, as well as explanations and descriptions of
-                              any trends and correlations witnessed.</p>
-                        </div>
-                      </div>
-                      <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12">
-                          <div class="box">
-                            <h3>Visualizations</h3>
-                            <hr>
-                            <div class="container">
-                              <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-3 col-xs-3">
-                                  <a href="">
-                                    <img src="" alt="Max Temperature">
-                                  </a>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-3 col-xs-3">
-                                  <a href="">
-                                    <img src="" alt="Humidity">
-                                  </a>
-                                </div>  
-                              
-                                  <div class="col-lg-6 col-md-6 col-sm-3 col-xs-3">
-                                    <a href="">
-                                      <img src="" alt="Cloudiness">
-                                    </a>
-                                  </div>
-                                  <div class="col-lg-6 col-md-6 col-sm-3 col-xs-3">
-                                    <a href="">
-                                      <img src="" alt="Wind Speed">
-                                    </a>
-                                  </div>  
-                                </div>
-                              </div>
+      <div class ="row">
+          <div class = "col-md-8">
+              <h3><strong>Featured Mars Image</strong></h3>
+              <img src = "{{mars_data.featuredImg}}" alt ="Featured Mars Image">
+          </div>
+          <div class = "col-md-4">
+                  <h4><strong>Current Weather on Mars</strong></h4>
+                  <p>{{mars_data.marsWeather}}</p>
+                  <br>
+                  <h4><strong>Mars Facts</strong></h4>
+                  <p>{{mars_data.html_str | safe}}</p>
+                
+              </div>
+      </div>
+      
+      <div class ="row" id="mars-hemispheres">
+          <div class = "col-md-12">
+              <h3><center><strong>Mars Hemispheres</strong></center></h3>
+              {% for hemisphere in mars_data.hemisphereImg_urls %}
+                  <div class = "col-md-6">
+                      <div class = "thumbnail">
+                          <img src = "{{hemisphere.img_url}}" >
+                              <h3>{{hemisphere.title}}</h3>
                           </div>
-                        </div>
-                        </div>
-            </div>
-
-            <div class="container">
-                    <div class="row">
-                        <div class="column">
-                           
-                        </div>
-                    </div>
-                </div>
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    </body>
-
-</html>
+                      </div>
+              {% endfor %}
+                  </div>
+          
+          </div>
+      </div>
+      </div>
+      </div>
+    </div>
+</body>
+</html>  
