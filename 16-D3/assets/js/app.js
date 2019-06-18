@@ -32,11 +32,11 @@ var svg = d3
 var chartGroup = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+  // Load data
   d3.csv("assets/data/data.csv").then(function(data)  {
     //parse data
     data.forEach(function(data) {
         data.poverty = +data.poverty;
-        data.abbr = +data.abbr;
         data.healthcare = +data.healthcare;
     });
 
@@ -63,17 +63,30 @@ var chartGroup = svg.append("g")
     chartGroup.append("g")
         .call(leftAxis);
 
-    //append initial circles
+    // Append initial circles
     var circlesGroup = chartGroup.selectAll("circle")
         .data(data)
         .enter()
         .append("circle")
+        .attr("class", "bubble")
         .attr("cx", d => xLinearScale(d.poverty))
         .attr("cy", d => yLinearScale(d.healthcare))
         .attr("r", 12)
         .attr("fill", "skyblue")
         .attr("opacity", ".5");
 
+    // State abbreviation
+      circlesGroup.selectAll("circle")
+        .data(data)
+        .enter()
+        .append("text")
+          .text((d) => (d.abbr))
+          .attr("cx", d => xLinearScale(d.poverty))
+          .attr("cy", d => yLinearScale(d.healthcare))
+          .attr("font-family", "sans-serif")
+          .attr("font-size", "6px")
+          .attr("fill", "white")
+          .attr("text-anchor", "middle");
 
     // Initialize tool tip
     var toolTip = d3.tip()
@@ -116,3 +129,4 @@ makeResponsive();
 
 // Event listener for window resize.
 d3.select(window).on("resize", makeResponsive);
+;
